@@ -16,8 +16,8 @@ def download_single(args):
     stream.first().download(DOWNLOAD_FOLDER)
 
     if(not args.video and args.mp3):
-        mp4 = DOWNLOAD_FOLDER + "%s.mp4" % yt.title
-        mp3 = DOWNLOAD_FOLDER + "%s.mp3" % yt.title
+        mp4 = DOWNLOAD_FOLDER + stream.first().default_filename
+        mp3 = DOWNLOAD_FOLDER + stream.first().default_filename.replace('.mp4', '.mp3')
         ffmpeg = ('ffmpeg -nostdin -loglevel error -i "{mp4}" "{mp3}" '.format(mp4=mp4, mp3=mp3))
         try:
             subprocess.run(ffmpeg, shell=True)
@@ -39,8 +39,8 @@ def download_playlist(args):
         stream.first().download(DOWNLOAD_FOLDER)
 
         if(not args.video and args.mp3):
-            mp4 = DOWNLOAD_FOLDER + "'%s'.mp4" % video.title
-            mp3 = DOWNLOAD_FOLDER + "'%s'.mp3" % video.title
+            mp4 = DOWNLOAD_FOLDER + stream.first().default_filename
+            mp3 = DOWNLOAD_FOLDER + stream.first().default_filename.replace('.mp4', '.mp3')
             ffmpeg = ('ffmpeg -nostdin -loglevel error -i "{mp4}" "{mp3}" '.format(mp4=mp4, mp3=mp3))
             try:
                 subprocess.run(ffmpeg, shell=True)
@@ -61,7 +61,7 @@ Parser = argparse.ArgumentParser(prog="yt-downloader",usage='%(prog)s [options] 
 Parser.add_argument('Url', metavar='url', type=str, help='Youtube video/playlist url')
 Parser.add_argument('-p', '--playlist', action='store_true', help='use when downloading a playlist')
 Parser.add_argument('-v', '--video', action='store_true', help='use when you want to download as a video file and not as an audio file.')
-Parser.add_argument('-mp3', action='store_true', help='use when you want to download to download as an mp3 file. (You need ffmpeg installed on you OS)')
+Parser.add_argument('-m', '--mp3', action='store_true', help='use when you want to download to download as an mp3 file. (You need ffmpeg installed on you OS)')
 
 # Execute the parse_args() method
 args = Parser.parse_args()
